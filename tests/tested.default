@@ -1,0 +1,10 @@
+
+build: gcc -g -o %.out % -Isrc -fsanitize=address,undefined
+run: %.out
+cleanup: rm %.out
+
+buildtime: < 10s
+time: < 10s
+exit: = 0
+stderr: = 
+
