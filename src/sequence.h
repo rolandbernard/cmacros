@@ -2,6 +2,7 @@
 #define _SEQUENCE_H_
 
 #include "if-empty.h"
+#include "for-each.h"
 #include "apply.h"
 
 #define FIRST_HELPER(...) __VA_ARGS__ EMPTY (
@@ -10,5 +11,9 @@
 #define SECOND(...) FIRST(REST(__VA_ARGS__))
 
 #define GET_SEQ_ELEMENT(I, SEQ) FIRST(APPLY(REST, I, SEQ))
+
+#define SEQUENCE_ELEMENT(...) (__VA_ARGS__)
+
+#define TO_SEQUENCE(...) __VA_OPT__(FOR_EACH(SEQUENCE_ELEMENT, __VA_ARGS__))
 
 #endif

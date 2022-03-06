@@ -5,8 +5,6 @@
 #include "if-empty.h"
 #include "sequence.h"
 
-#define TAGGED_UNION(NAME, ...) TAGGED_STRUCT(NAME, (), __VA_ARGS__)
-
 #define COMMA() ,
 
 #define TAGGED_ENUM_NAME(NAME, FIELD) NAME ## Kind ## FIELD
@@ -27,17 +25,28 @@
 #define TAGGED_UNION_FIELDS(NAME, ...) \
     FOR_EACH_WITH(TAGGED_UNION_FIELD, (NAME), FOR_EACH_JOIN(FIRST, COMMA, __VA_ARGS__))
 
+#define TAGGED_UNION(NAME, ...) TAGGED_STRUCT(NAME, (), __VA_ARGS__)
+
 #define TAGGED_STRUCT(NAME, COMMON, ...) \
-    typedef struct NAME NAME; \
-    typedef enum NAME ## Kind NAME ## Kind; \
     enum NAME ## Kind { TAGGED_ENUM_NAMES(NAME, __VA_ARGS__) }; \
     TAGGED_UNION_TYPES(NAME, __VA_ARGS__) \
     struct NAME { \
-        NAME ## Kind kind; \
+        enum NAME ## Kind kind; \
         TAKE COMMON \
         union { \
             TAGGED_UNION_FIELDS(NAME, __VA_ARGS__) \
         } unsafe; \
-    };
+    }; \
+    typedef struct NAME NAME; \
+    typedef enum NAME ## Kind NAME ## Kind;
+
+#define TAGGED_COMMON_NEW(NAME, KIND, COMMON, SPECIAL) \
+    { TAKE COMMON IF_NOT_EMPTY COMMON (,) .unsafe = { .KIND = SPECIAL } }
+
+#define TAGGED_NEW(NAME, KIND, SPECIAL) \
+    TAGGED_COMMON_NEW(NAME, KIND, (), SPECIAL)
+
+#define TAGGED_EMPTY_NEW(NAME, KIND) \
+    TAGGED_NEW(NAME, KIND, {})
 
 #endif
