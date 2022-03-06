@@ -1,7 +1,6 @@
 #ifndef _TAGGED_UNION_H_
 #define _TAGGED_UNION_H_
 
-#include "expand.h"
 #include "for-each.h"
 #include "if-empty.h"
 #include "sequence.h"
@@ -15,7 +14,7 @@
 #define TAGGED_ENUM_NAMES(NAME, ...) \
     FOR_EACH_WITH_JOIN(TAGGED_ENUM_NAME, (NAME), COMMA, FOR_EACH_JOIN(FIRST, COMMA, __VA_ARGS__))
 
-#define TAGGED_UNION_TYPE(NAME, TYPE, FIELD) typedef TYPE NAME ## FIELD;
+#define TAGGED_UNION_TYPE(NAME, TYPE, FIELD) typedef IF_NOT_EMPTY(TYPE)(TYPE) IF_EMPTY(TYPE)(struct {}) NAME ## FIELD;
 
 #define TAGGED_UNION_CASE_TYPES(NAME, CASE) \
     FOR_EACH_WITH_SIMPLE(TAGGED_UNION_TYPE, (NAME, REST(CASE)), FIRST(CASE))
