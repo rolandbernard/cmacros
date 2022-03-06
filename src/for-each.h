@@ -1,0 +1,28 @@
+#ifndef _FOR_EACH_H_
+#define _FOR_EACH_H_
+
+#include "curry.h"
+#include "expand.h"
+
+#define FOR_EACH_PARENS ()
+
+#define FOR_EACH_WITH(FUNC, ARGS, ...) \
+    __VA_OPT__(EXPAND(FOR_EACH_WITH_HELPER(FUNC, ARGS, __VA_ARGS__)))
+
+#define FOR_EACH_WITH_HELPER(FUNC, ARGS, ARG1, ...) \
+    CURRY_WITH(FUNC, ARGS)(ARG1) __VA_OPT__(FOR_EACH_WITH_AGAIN FOR_EACH_PARENS (FUNC, ARGS, __VA_ARGS__))
+
+#define FOR_EACH_WITH_AGAIN() FOR_EACH_WITH_HELPER
+
+#define FOR_EACH(FUNC, ...) \
+    __VA_OPT__(FOR_EACH_WITH(FUNC, (), __VA_ARGS__))
+
+#define FOR_EACH_JOIN(FUNC, JOIN, ...) \
+    __VA_OPT__(FOR_EACH_JOIN_HELPER(FUNC, JOIN, __VA_ARGS__))
+
+#define FOR_EACH_JOIN_HELPER(FUNC, JOIN, ARG1, ...) \
+    FUNC(ARG1) __VA_OPT__(FOR_EACH_WITH(JOIN_HELPER, (JOIN, FUNC), __VA_ARGS__))
+
+#define JOIN_HELPER(JOIN, FUNC, ARG) JOIN() FUNC(ARG)
+
+#endif
