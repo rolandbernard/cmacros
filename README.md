@@ -14,6 +14,6 @@ is also available in gcc and clang for C.
 ## Development
 
 There are two directories in this repository:
-* `src/` This directory is for all the code of the generic implementations. 
-* `tests/` This directory contains all the tests for all implementations.
+* `src/` This directory is for all the code of the header files. 
+* `tests/` This directory contains some minimal tests.
 
