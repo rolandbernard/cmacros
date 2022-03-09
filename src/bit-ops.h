@@ -17,6 +17,6 @@
 
 #define LSB(X) ((X) & -(X))
 
-#define IS_POW2(X) ((X) & ((X) - 1)) == 0
+#define IS_POW2(X) (((X) & ((X) - 1)) == 0)
 
 #endif
