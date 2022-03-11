@@ -43,11 +43,11 @@
     typedef struct NAME NAME; \
     typedef enum NAME ## Kind NAME ## Kind;
 
-#define TAGGED_COMMON_NEW(NAME, KIND, COMMON, SPECIAL) \
-    { .kind = NAME ## Kind ## KIND, TAKE COMMON IF_NOT_EMPTY COMMON (,) .unsafe = { .KIND = SPECIAL } }
+#define TAGGED_COMMON_NEW(NAME, KIND, COMMON, ...) \
+    { .kind = NAME ## Kind ## KIND, TAKE COMMON IF_NOT_EMPTY COMMON (,) .unsafe = { .KIND = __VA_ARGS__ } }
 
-#define TAGGED_NEW(NAME, KIND, SPECIAL) \
-    TAGGED_COMMON_NEW(NAME, KIND, (), SPECIAL)
+#define TAGGED_NEW(NAME, KIND, ...) \
+    TAGGED_COMMON_NEW(NAME, KIND, (), __VA_ARGS__)
 
 #define TAGGED_COMMON_EMPTY_NEW(NAME, KIND, COMMON) \
     { .kind = NAME ## Kind ## KIND, TAKE COMMON }
